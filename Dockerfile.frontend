@@ -12,11 +12,11 @@ RUN uv venv .venv
 ENV PATH="/app/.venv/bin:$PATH"
 
 # Install dependencies
-COPY live/requirements.txt .
+COPY requirements.txt .
 RUN uv pip install -r requirements.txt
 
 # Copy application code
-COPY live/app.py .
+COPY app.py .
 
 # Railway injects $PORT at runtime; default to 8501 for local runs
 ENV PORT=8501
