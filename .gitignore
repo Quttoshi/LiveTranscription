@@ -1,0 +1,25 @@
+# Environment variables
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+venv/
+env/
+.venv/
+*.egg-info/
+dist/
+build/
+
+# Claude internal
+.sixth/
+
+# Nested git repo
+LiveTranscription/
+
+# OS
+.DS_Store
+Thumbs.db
