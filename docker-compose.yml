@@ -1,0 +1,24 @@
+services:
+  backend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - PORT=8000
+      - SPEECHMATICS_API_KEY=${SPEECHMATICS_API_KEY}
+    restart: on-failure
+
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile.frontend
+    ports:
+      - "8501:8501"
+    environment:
+      - PORT=8501
+      - BACKEND_WS_URL=ws://backend:8000/ws/transcribe
+    depends_on:
+      - backend
+    restart: on-failure

@@ -1,5 +1,7 @@
 # Environment variables
 .env
+.env.*
+!.env.example
 
 # Python
 __pycache__/
@@ -14,6 +16,13 @@ env/
 dist/
 build/
 
+# uv
+uv.lock
+.python-version
+
+# Docker
+.dockerignore
+
 # Claude internal
 .sixth/
 
@@ -23,3 +32,4 @@ LiveTranscription/
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini

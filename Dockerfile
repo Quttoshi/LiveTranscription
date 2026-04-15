@@ -2,12 +2,21 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install dependencies first (layer caching)
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+# Install uv
+RUN pip install uv
+
+# Create virtual environment
+RUN uv venv .venv
+
+# Activate venv by adding it to PATH
+ENV PATH="/app/.venv/bin:$PATH"
+
+# Install dependencies
+COPY live/requirements.txt .
+RUN uv pip install -r requirements.txt
 
 # Copy application code
-COPY live_transcription.py .
+COPY live/live_transcription.py .
 
 # Railway injects $PORT at runtime; default to 8000 for local runs
 ENV PORT=8000
