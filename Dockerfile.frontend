@@ -2,8 +2,8 @@ FROM python:3.12-slim
 
 WORKDIR /app
 
-# Install uv
-RUN pip install uv
+# Install uv (copy binary directly — no pip overhead)
+COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
 
 # Create virtual environment
 RUN uv venv .venv
