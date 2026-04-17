@@ -75,7 +75,7 @@ class _QueueStream:
 
 # 3. --- MAIN WEBSOCKET ENDPOINT ---
 @app.websocket("/ws/transcribe")
-async def websocket_live_transcribe(websocket: WebSocket):
+async def websocket_live_transcribe(websocket: WebSocket, max_speakers: int = 2):
     await websocket.accept()
     log.info("[ws] client connected")
 
@@ -83,7 +83,7 @@ async def websocket_live_transcribe(websocket: WebSocket):
     speaker_map: dict[str, str] = {}
     connected = True
 
-    FLUSH_DELAY = 1.5  # seconds of silence before flushing a segment
+    FLUSH_DELAY = 0.5  # seconds of silence before flushing a segment
 
     state = {"last_sm_speaker": "S1"}
     speaker_buffers: dict[str, list[str]] = {}
@@ -213,7 +213,7 @@ async def websocket_live_transcribe(websocket: WebSocket):
             operating_point="enhanced",
             diarization="speaker",
             enable_partials=True,
-            speaker_diarization_config=RTSpeakerDiarizationConfig(max_speakers=10),
+            speaker_diarization_config=RTSpeakerDiarizationConfig(max_speakers=max_speakers),
         )
 
         client = WebsocketClient(settings)

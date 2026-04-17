@@ -227,7 +227,7 @@ transcript_component = f"""
   </div>
 
 <script>
-const WS_URL      = "{backend_url}";
+const WS_URL      = "{backend_url}?max_speakers={max_speakers}";
 const SPEAKER_CLS = ['s1','s2','s3','s4','s5','s6'];
 
 let ws           = null;
