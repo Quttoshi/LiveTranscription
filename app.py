@@ -674,10 +674,6 @@ transcript_component = f"""
       </button>
     </div>
     <div class="field">
-      <label for="backendUrl">Backend WebSocket URL</label>
-      <input id="backendUrl" value="{backend_url}" />
-    </div>
-    <div class="field">
       <label for="maxSpeakers">Max speakers</label>
       <input id="maxSpeakers" type="number" min="1" max="10" value="4" />
     </div>
@@ -747,8 +743,7 @@ function saveSettings() {{
 }}
 
 function buildWsUrl() {{
-  const raw = document.getElementById("backendUrl").value.trim() || DEFAULT_BACKEND;
-  const url = new URL(raw);
+  const url = new URL(DEFAULT_BACKEND);
   url.searchParams.set("max_speakers", document.getElementById("maxSpeakers").value || "4");
   return url.toString();
 }}
