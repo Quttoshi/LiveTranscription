@@ -236,20 +236,34 @@ transcript_component = f"""
 
   #transcript {{
     width: 100%;
+    min-height: 150px;
     max-height: 190px;
     overflow-y: auto;
-    display: none;
-    padding: 0 4px;
+    display: block;
+    padding: 10px;
+    border: 1px solid #e5edf8;
+    border-radius: 8px;
+    background: #f8fbff;
+  }}
+
+  .transcript-empty {{
+    min-height: 128px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #64748b;
+    font-size: 15px;
+    text-align: center;
   }}
 
   .segment, .partial-row {{
-    border: 1px solid #e5edf8;
+    border: 1px solid #d9e6f5;
     border-left: 4px solid var(--blue);
     border-radius: 8px;
     background: #ffffff;
     padding: 12px 14px;
     margin-bottom: 10px;
-    box-shadow: 0 8px 22px rgba(15, 23, 42, .05);
+    box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
   }}
 
   .partial-row {{
@@ -524,7 +538,9 @@ transcript_component = f"""
     </div>
 
     <section class="stage" aria-live="polite">
-      <div id="transcript"></div>
+      <div id="transcript">
+        <div id="emptyState" class="transcript-empty">Press the microphone and start speaking.</div>
+      </div>
     </section>
 
     <section class="controls" aria-label="Recording controls">
@@ -630,9 +646,7 @@ function saveSettings() {{
 function buildWsUrl() {{
   const raw = document.getElementById("backendUrl").value.trim() || DEFAULT_BACKEND;
   const url = new URL(raw);
-  url.searchParams.set("language", document.getElementById("languageSelect").value);
   url.searchParams.set("max_speakers", document.getElementById("maxSpeakers").value || "4");
-  url.searchParams.set("operating_point", proEnabled ? "enhanced" : "standard");
   return url.toString();
 }}
 
@@ -656,7 +670,7 @@ async function startRecording() {{
       button.innerHTML = stopIcon;
       button.setAttribute("aria-label", "Stop recording");
       document.getElementById("hint").textContent = "Listening...";
-      showTranscript();
+      setEmptyState("Listening... speak into your microphone.");
       startTimer();
 
       micStream = await navigator.mediaDevices.getUserMedia({{ audio: true }});
@@ -729,12 +743,24 @@ function showTranscript() {{
   document.getElementById("transcript").style.display = "block";
 }}
 
+function setEmptyState(text) {{
+  showTranscript();
+  const emptyState = document.getElementById("emptyState");
+  if (emptyState) emptyState.textContent = text;
+}}
+
+function hideEmptyState() {{
+  const emptyState = document.getElementById("emptyState");
+  if (emptyState) emptyState.remove();
+}}
+
 function speakerName(speaker) {{
   return String(speaker || "speaker").replace(/_/g, " ");
 }}
 
 function updatePartial(speaker, text) {{
   showTranscript();
+  hideEmptyState();
   const id = "partial-" + speaker;
   let row = document.getElementById(id);
   if (!row) {{
@@ -749,6 +775,7 @@ function updatePartial(speaker, text) {{
 
 function addFinal(speaker, text) {{
   showTranscript();
+  hideEmptyState();
   const partial = document.getElementById("partial-" + speaker);
   if (partial) partial.remove();
   const div = document.createElement("div");
@@ -777,8 +804,7 @@ function escapeHtml(value) {{
 function clearTranscript() {{
   transcriptText = [];
   const box = document.getElementById("transcript");
-  box.innerHTML = "";
-  box.style.display = "none";
+  box.innerHTML = '<div id="emptyState" class="transcript-empty">Press the microphone and start speaking.</div>';
   document.getElementById("hint").textContent = "Transcript cleared";
 }}
 
