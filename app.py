@@ -158,6 +158,17 @@ transcript_component = f"""
     padding: 28px 24px 18px;
   }}
 
+  .app.session-active .hero,
+  .app.session-active .settings-row {{
+    display: none;
+  }}
+
+  .app.session-active .main {{
+    grid-template-rows: 1fr auto;
+    min-height: 656px;
+    padding: 0 24px 18px;
+  }}
+
   .settings-row {{
     width: min(686px, calc(100vw - 48px));
     margin: 0 auto;
@@ -229,9 +240,18 @@ transcript_component = f"""
     width: min(860px, calc(100vw - 48px));
     margin: 18px auto 0;
     min-height: 190px;
-    display: flex;
+    display: none;
     align-items: flex-start;
     justify-content: center;
+  }}
+
+  .app.session-active .stage {{
+    width: min(980px, calc(100vw - 48px));
+    min-height: 0;
+    height: 100%;
+    margin: 0 auto;
+    display: flex;
+    align-items: stretch;
   }}
 
   #transcript {{
@@ -246,6 +266,16 @@ transcript_component = f"""
     background: #f8fbff;
   }}
 
+  .app.session-active #transcript {{
+    height: 100%;
+    min-height: 0;
+    max-height: none;
+    padding: 34px 36px 18px;
+    border: 0;
+    border-radius: 0;
+    background: #ffffff;
+  }}
+
   .transcript-empty {{
     min-height: 128px;
     display: flex;
@@ -256,6 +286,13 @@ transcript_component = f"""
     text-align: center;
   }}
 
+  .app.session-active .transcript-empty {{
+    min-height: 100%;
+    align-items: flex-start;
+    justify-content: center;
+    padding-top: 42px;
+  }}
+
   .segment, .partial-row {{
     border: 1px solid #d9e6f5;
     border-left: 4px solid var(--blue);
@@ -264,6 +301,18 @@ transcript_component = f"""
     padding: 12px 14px;
     margin-bottom: 10px;
     box-shadow: 0 8px 22px rgba(15, 23, 42, .04);
+  }}
+
+  .app.session-active .segment,
+  .app.session-active .partial-row {{
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+    padding: 0;
+    margin-bottom: 22px;
+    box-shadow: none;
+    font-size: 20px;
+    line-height: 1.55;
   }}
 
   .partial-row {{
@@ -282,12 +331,22 @@ transcript_component = f"""
     margin-bottom: 4px;
   }}
 
+  .app.session-active .speaker {{
+    font-size: 13px;
+    margin-bottom: 6px;
+  }}
+
   .controls {{
     display: grid;
     justify-content: center;
     justify-items: center;
     gap: 10px;
     margin-bottom: 18px;
+  }}
+
+  .app.session-active .controls {{
+    align-self: end;
+    margin-bottom: 0;
   }}
 
   .hint {{
@@ -487,12 +546,21 @@ transcript_component = f"""
       padding: 28px 16px 24px;
     }}
 
+    .app.session-active .main {{
+      min-height: 620px;
+      padding: 0 16px 18px;
+    }}
+
     .settings-row {{
       width: 100%;
       font-size: 17px;
     }}
 
     .controls {{ margin-bottom: 18px; }}
+
+    .app.session-active #transcript {{
+      padding: 24px 12px 12px;
+    }}
   }}
 </style>
 </head>
@@ -665,6 +733,7 @@ async function startRecording() {{
     ws = new WebSocket(wsUrl);
     ws.onopen = async () => {{
       recording = true;
+      document.querySelector(".app").classList.add("session-active");
       button.disabled = false;
       button.classList.add("recording");
       button.innerHTML = stopIcon;
@@ -805,6 +874,7 @@ function clearTranscript() {{
   transcriptText = [];
   const box = document.getElementById("transcript");
   box.innerHTML = '<div id="emptyState" class="transcript-empty">Press the microphone and start speaking.</div>';
+  document.querySelector(".app").classList.remove("session-active");
   document.getElementById("hint").textContent = "Transcript cleared";
 }}
 
