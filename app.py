@@ -351,13 +351,15 @@ transcript_component = f"""
 
   .hint {{
     position: relative;
-    min-height: 38px;
+    min-height: 34px;
     border-radius: 24px;
-    padding: 8px 16px;
+    padding: 7px 14px;
     background: var(--blue-2);
     color: #2a86f2;
-    font-size: 16px;
+    font-size: 15px;
     font-weight: 650;
+    line-height: 1.25;
+    white-space: nowrap;
   }}
 
   .hint::after {{
@@ -378,6 +380,24 @@ transcript_component = f"""
     align-items: center;
     justify-content: center;
     gap: 26px;
+  }}
+
+  .back-button {{
+    display: none;
+    height: 38px;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    background: #ffffff;
+    color: var(--blue);
+    font-weight: 650;
+  }}
+
+  .app.session-active .back-button {{
+    display: inline-flex;
   }}
 
   .time-badge, .gear-button {{
@@ -613,6 +633,10 @@ transcript_component = f"""
 
     <section class="controls" aria-label="Recording controls">
       <div id="hint" class="hint">Press and start talking</div>
+      <button id="backButton" class="back-button" type="button" onclick="returnToStart()" aria-label="Back to start">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m12 19-7-7 7-7"/><path d="M19 12H5"/></svg>
+        Back
+      </button>
       <div class="control-row">
         <div class="time-badge" aria-label="Session duration">
           <strong id="minutes">0</strong>
@@ -779,6 +803,12 @@ async function startRecording() {{
 function stopRecording() {{
   cleanup();
   document.getElementById("hint").textContent = "Stopped";
+}}
+
+function returnToStart() {{
+  if (recording) cleanup();
+  document.querySelector(".app").classList.remove("session-active");
+  document.getElementById("hint").textContent = "Press and start talking";
 }}
 
 function cleanup() {{
