@@ -340,6 +340,8 @@ transcript_component = f"""
     display: grid;
     justify-content: center;
     justify-items: center;
+    align-content: end;
+    grid-auto-rows: max-content;
     gap: 10px;
     margin-bottom: 18px;
   }}
@@ -351,7 +353,16 @@ transcript_component = f"""
 
   .hint {{
     position: relative;
-    min-height: 34px;
+    width: max-content;
+    max-width: calc(100vw - 40px);
+    height: 34px;
+    min-height: 0;
+    max-height: 34px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    justify-self: center;
+    align-self: center;
     border-radius: 24px;
     padding: 7px 14px;
     background: var(--blue-2);
